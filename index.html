@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NYC Subway Line Guessing Game</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      padding: 2em;
+      background-color: #f8f9fa;
+    }
+    button {
+      margin: 0.5em;
+      padding: 1em;
+      font-size: 1em;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    button:hover {
+      background-color: #ddd;
+    }
+    #result {
+      margin-top: 1em;
+      font-weight: bold;
+    }
+    h1 {
+      color: #0055aa;
+    }
+  </style>
+</head>
+<body>
+  <h1>🚇 NYC Subway Line Guessing Game</h1>
+  <p id="station">Loading station...</p>
+  <div id="choices"></div>
+  <div id="result"></div>
+  <p>Score: <span id="score">0</span></p>
+
+  <script>
+    const stations = [
+      { name: "Times Sq - 42 St", line: "1 2 3 N Q R W S" },
+      { name: "Grand Central - 42 St", line: "4 5 6 7 S" },
+      { name: "34 St - Herald Sq", line: "B D F M N Q R W" },
+      { name: "Fulton St", line: "2 3 4 5 A C J Z" },
+      { name: "Atlantic Av - Barclays Ctr", line: "2 3 4 5 B D N Q R" },
+      { name: "Lexington Av/59 St", line: "4 5 6 N R W" },
+      { name: "Union Sq - 14 St", line: "4 5 6 L N Q R W" },
+      { name: "Chambers St", line: "1 2 3 A C" },
+      { name: "Jackson Hts - Roosevelt Av", line: "E F M R 7" },
+      { name: "Coney Island - Stillwell Av", line: "D F N Q" }
+    ];
+
+    const lines = [
+      "1", "2", "3", "4", "5", "6", "7",
+      "A", "B", "C", "D", "E", "F", "G", "J", "L", "M", "N", "Q", "R", "S", "W", "Z"
+    ];
+
+    let currentStation = null;
+    let score = 0;
+
+    function pickRandomStation() {
+      currentStation = stations[Math.floor(Math.random() * stations.length)];
+      document.getElementById("station").innerText = `Which line stops at "${currentStation.name}"?`;
+      document.getElementById("result").innerText = "";
+      showChoices();
+    }
+
+    function showChoices() {
+      const container = document.getElementById("choices");
+      container.innerHTML = "";
+      const shuffledLines = lines.sort(() => 0.5 - Math.random()).slice(0, 6);
+      // Ensure correct answer is in the choices
+      const correctLines = currentStation.line.split(" ");
+      const correct = correctLines[Math.floor(Math.random() * correctLines.length)];
+      if (!shuffledLines.includes(correct)) {
+        shuffledLines[Math.floor(Math.random() * shuffledLines.length)] = correct;
+      }
+      shuffledLines.forEach(line => {
+        const btn = document.createElement("button");
+        btn.innerText = line;
+        btn.onclick = () => checkAnswer(line);
+        container.appendChild(btn);
+      });
+    }
+
+    function checkAnswer(selected) {
+      const correctAnswers = currentStation.line.split(" ");
+      if (correctAnswers.includes(selected)) {
+        document.getElementById("result").innerText = "✅ Correct!";
+        score++;
+      } else {
+        document.getElementById("result").innerText = `❌ Wrong! It was: ${currentStation.line}`;
+      }
+      document.getElementById("score").innerText = score;
+      setTimeout(pickRandomStation, 1200);
+    }
+
+    pickRandomStation();
+  </script>
+</body>
+</html>
