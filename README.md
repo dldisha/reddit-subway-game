@@ -1,3 +1,3 @@
 # reddit-subway-game
 
-This game is park of reddit mini hackathon as part of NYC tech week 2025. 
+This game is part of the Reddit mini hackathon as part of NYC Tech Week 2025. 
